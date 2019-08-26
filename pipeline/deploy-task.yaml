@@ -1,0 +1,21 @@
+    - name: package
+      image: kramos/alpine-zip:latest
+      workingDir: /workspace/functionapp-git
+      command:
+      - sh
+      args:
+      - package.sh
+    - name: azure-login
+      image: zenika/terraform-azure-cli:latest
+      workingDir: /workspace/functionapp-git/infrastructure
+      command:
+      - az
+      args:
+      - login
+      - --service-principal
+      - -u
+      - "$(USERNAME)"
+      - -p
+      - "$(PASSWORD)"
+      - --tenant
+      - "$(TENANT)"

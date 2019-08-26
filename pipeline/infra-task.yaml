@@ -9,43 +9,34 @@ spec:
       - name: functionapp-git
         type: git
   steps:
-    - name: azure-login
+    - name: terraform-test
       image: zenika/terraform-azure-cli:latest
       workingDir: /workspace/functionapp-git/infrastructure
       command:
-      - az
+      - sleep
       args:
-      - login
-      - --service-principal
-      - -u
-      - "$(USERNAME)"
-      - -p
-      - "$(PASSWORD)"
-      - --tenant
-      - "$(TENANT)"
+      - "400"
       env:
-      - name: USERNAME
+      - name: ARM_CLIENT_ID
         valueFrom:
           secretKeyRef:
             name: azure-credentials
             key: username
-      - name: PASSWORD
+      - name: ARM_CLIENT_SECRET
         valueFrom:
           secretKeyRef:
             name: azure-credentials
             key: password
-      - name: TENANT
+      - name: ARM_TENANT_ID
         valueFrom:
           secretKeyRef:
             name: azure-credentials
             key: tenant
-    - name: package
-      image: kramos/alpine-zip:latest
-      workingDir: /workspace/functionapp-git
-      command:
-      - sh
-      args:
-      - package.sh
+      - name: ARM_SUBSCRIPTION_ID
+        valueFrom:
+          secretKeyRef:
+            name: azure-credentials
+            key: subscription
     - name: terraform-init
       image: zenika/terraform-azure-cli:latest
       workingDir: /workspace/functionapp-git/infrastructure
@@ -53,6 +44,27 @@ spec:
       - terraform
       args:
       - init
+      env:
+      - name: ARM_CLIENT_ID
+        valueFrom:
+          secretKeyRef:
+            name: azure-credentials
+            key: username
+      - name: ARM_CLIENT_SECRET
+        valueFrom:
+          secretKeyRef:
+            name: azure-credentials
+            key: password
+      - name: ARM_TENANT_ID
+        valueFrom:
+          secretKeyRef:
+            name: azure-credentials
+            key: tenant
+      - name: ARM_SUBSCRIPTION_ID
+        valueFrom:
+          secretKeyRef:
+            name: azure-credentials
+            key: subscription
     - name: terraform-plan
       image: zenika/terraform-azure-cli:latest
       workingDir: /workspace/functionapp-git/infrastructure
@@ -60,6 +72,27 @@ spec:
       - terraform
       args:
       - plan
+      env:
+      - name: ARM_CLIENT_ID
+        valueFrom:
+          secretKeyRef:
+            name: azure-credentials
+            key: username
+      - name: ARM_CLIENT_SECRET
+        valueFrom:
+          secretKeyRef:
+            name: azure-credentials
+            key: password
+      - name: ARM_TENANT_ID
+        valueFrom:
+          secretKeyRef:
+            name: azure-credentials
+            key: tenant
+      - name: ARM_SUBSCRIPTION_ID
+        valueFrom:
+          secretKeyRef:
+            name: azure-credentials
+            key: subscription
     - name: terraform-apply
       image: zenika/terraform-azure-cli:latest
       workingDir: /workspace/functionapp-git/infrastructure
@@ -68,5 +101,27 @@ spec:
       args:
       - apply
       - -auto-approve
+      env:
+      - name: ARM_CLIENT_ID
+        valueFrom:
+          secretKeyRef:
+            name: azure-credentials
+            key: username
+      - name: ARM_CLIENT_SECRET
+        valueFrom:
+          secretKeyRef:
+            name: azure-credentials
+            key: password
+      - name: ARM_TENANT_ID
+        valueFrom:
+          secretKeyRef:
+            name: azure-credentials
+            key: tenant
+      - name: ARM_SUBSCRIPTION_ID
+        valueFrom:
+          secretKeyRef:
+            name: azure-credentials
+            key: subscription
+
 
 
