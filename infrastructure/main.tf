@@ -1,5 +1,5 @@
 resource "azurerm_resource_group" "main" {
-    name     = "drone-azure-function-demo"
+    name     = "tekton-azure-function-demo"
     location = "centralus"
 }
 
@@ -26,7 +26,6 @@ resource "azurerm_storage_account" "sa" {
 
 resource "azurerm_storage_container" "container" {
   name                  = "function-storage"
-  resource_group_name   = "${azurerm_resource_group.main.name}"
   storage_account_name  = "${azurerm_storage_account.sa.name}"
   container_access_type = "private"
 }
@@ -69,7 +68,7 @@ data "azurerm_storage_account_sas" "sas" {
 
 
 resource "azurerm_function_app" "test" {
-  name                      = "mcshane-drone-functionapp-test"
+  name                      = "mcshane-tekton-functionapp-test"
   location                  = "${azurerm_resource_group.main.location}"
   resource_group_name       = "${azurerm_resource_group.main.name}"
   app_service_plan_id       = "${azurerm_app_service_plan.plan.id}"
@@ -85,7 +84,7 @@ resource "azurerm_function_app" "test" {
   }
 
   app_settings = {
-    HASH            = "${base64sha256(file("../app.zip"))}"
+    HASH            = "${base64sha256(filebase64("../app.zip"))}"
     WEBSITE_USE_ZIP = "https://${azurerm_storage_account.sa.name}.blob.core.windows.net/${azurerm_storage_container.container.name}/${azurerm_storage_blob.function_blob.name}${data.azurerm_storage_account_sas.sas.sas}"
   }
 }
