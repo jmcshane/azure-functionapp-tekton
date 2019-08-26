@@ -41,7 +41,7 @@ resource "azurerm_storage_blob" "function_blob" {
 }
 
 data "azurerm_storage_account_sas" "sas" {
-  connection_string = "${azurerm_storage_account.container.primary_connection_string}"
+  connection_string = "${azurerm_storage_account.sa.primary_connection_string}"
   resource_types {
     service = false
     container = false
@@ -84,7 +84,7 @@ resource "azurerm_function_app" "test" {
       enabled = false
   }
 
-  app_settings {
+  app_settings = {
     HASH            = "${base64sha256(file("../app.zip"))}"
     WEBSITE_USE_ZIP = "https://${azurerm_storage_account.sa.name}.blob.core.windows.net/${azurerm_storage_container.container.name}/${azurerm_storage_blob.function_blob.name}${data.azurerm_storage_account_sas.sas.sas}"
   }

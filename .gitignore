@@ -1,3 +1,4 @@
+*.zip
 bin
 obj
 csx
@@ -10,7 +11,7 @@ Publish
 *.cscfg
 *.Cache
 project.lock.json
-
+.terraform
 /packages
 /TestResults
 
