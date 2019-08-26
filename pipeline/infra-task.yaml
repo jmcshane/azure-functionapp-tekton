@@ -73,6 +73,10 @@ spec:
       args:
       - apply
       - -auto-approve
+      - -var
+      - rg_name=$(inputs.params.resource_group_name)
+      - -var
+      - functionapp_name=$(inputs.param.function_name)
       env:
       - name: ARM_CLIENT_ID
         valueFrom:

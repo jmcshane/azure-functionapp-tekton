@@ -19,11 +19,11 @@ spec:
       - --only=prod
     - name: deploy
       image: jmcshane/azure-func-cli:latest
-      workingDir: /workspace/functionapp-git
+      workingDir: /workspace/functionapp-git/app
       command:
       - sh
       args:
-      - deploy.sh
+      - /workspace/functionapp-git/deploy.sh
       env:
       - name: USERNAME
         valueFrom:
