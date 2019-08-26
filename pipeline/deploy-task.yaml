@@ -18,7 +18,7 @@ spec:
       - install
       - --only=prod
     - name: deploy
-      image: jmcshane/azure-func-cli:latest
+      image: jmcshane/azure-func-cli:0.2
       workingDir: /workspace/functionapp-git/app
       command:
       - sh
