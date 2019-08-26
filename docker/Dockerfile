@@ -10,3 +10,5 @@ RUN apt-get update && apt-get install -y ca-certificates curl wget apt-transport
   wget -q https://packages.microsoft.com/config/ubuntu/19.04/packages-microsoft-prod.deb && \
   dpkg -i packages-microsoft-prod.deb && \
   apt-get update && apt-get install -y azure-functions-core-tools
+
+ADD deploy.sh /

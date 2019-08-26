@@ -1,5 +1,5 @@
 const httpFunction = require('./index');
-const context = require('../testing/defaultContext')
+const context = {};
 
 test('Http trigger should return known text', async () => {
 

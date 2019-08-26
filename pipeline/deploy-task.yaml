@@ -26,7 +26,7 @@ spec:
       command:
       - sh
       args:
-      - /workspace/functionapp-git/deploy.sh
+      - /deploy.sh
       env:
       - name: FUNCTION_NAME
         value: "$(inputs.params.function_name)"
