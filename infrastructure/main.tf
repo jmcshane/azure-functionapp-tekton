@@ -24,48 +24,6 @@ resource "azurerm_storage_account" "sa" {
   account_replication_type = "LRS"
 }
 
-resource "azurerm_storage_container" "container" {
-  name                  = "function-storage"
-  storage_account_name  = "${azurerm_storage_account.sa.name}"
-  container_access_type = "private"
-}
-
-resource "azurerm_storage_blob" "function_blob" {
-  name = "app.zip"
-  resource_group_name    = "${azurerm_resource_group.main.name}"
-  storage_account_name   = "${azurerm_storage_account.sa.name}"
-  storage_container_name = "${azurerm_storage_container.container.name}"
-  type   = "block"
-  source = "../app.zip"
-}
-
-data "azurerm_storage_account_sas" "sas" {
-  connection_string = "${azurerm_storage_account.sa.primary_connection_string}"
-  resource_types {
-    service = false
-    container = false
-    object    = true
-  }
-  services {
-    blob  = true
-    queue = false
-    table = false
-    file = false
-  }
-  start  = "2019-08-25"
-  expiry = "2020-08-25"
-  permissions {
-    read    = true
-    write   = false
-    delete  = false
-    list    = false
-    add     = false
-    create  = false
-    update  = false
-    process = false
-  }
-}
-
 
 resource "azurerm_function_app" "test" {
   name                      = "mcshane-tekton-functionapp-test"
@@ -75,6 +33,7 @@ resource "azurerm_function_app" "test" {
   storage_connection_string = "${azurerm_storage_account.sa.primary_connection_string}"
   enabled = true
   https_only = true
+  version = "~2"
   site_config {
       use_32_bit_worker_process = true
   }
@@ -84,7 +43,7 @@ resource "azurerm_function_app" "test" {
   }
 
   app_settings = {
-    HASH            = "${base64sha256(filebase64("../app.zip"))}"
-    WEBSITE_USE_ZIP = "https://${azurerm_storage_account.sa.name}.blob.core.windows.net/${azurerm_storage_container.container.name}/${azurerm_storage_blob.function_blob.name}${data.azurerm_storage_account_sas.sas.sas}"
+    FUNCTIONS_WORKER_RUNTIME      = "node"
+    WEBSITE_NODE_DEFAULT_VERSION  = "10.14.1"
   }
 }

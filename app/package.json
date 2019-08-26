@@ -8,5 +8,8 @@
   "author": "james.mcshane@objectpartners.com",
   "devDependencies": {
     "jest": "^24.9.0"
+  },
+  "dependencies": {
+    "test": "^0.6.0"
   }
 }

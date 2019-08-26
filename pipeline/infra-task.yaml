@@ -1,0 +1,72 @@
+apiVersion: tekton.dev/v1alpha1
+kind: Task
+metadata:
+  name: azure-deploy-infrastructure
+  namespace: azure-functionapp
+spec:
+  inputs:
+    resources:
+      - name: functionapp-git
+        type: git
+  steps:
+    - name: azure-login
+      image: zenika/terraform-azure-cli:latest
+      workingDir: /workspace/functionapp-git/infrastructure
+      command:
+      - az
+      args:
+      - login
+      - --service-principal
+      - -u
+      - "$(USERNAME)"
+      - -p
+      - "$(PASSWORD)"
+      - --tenant
+      - "$(TENANT)"
+      env:
+      - name: USERNAME
+        valueFrom:
+          secretKeyRef:
+            name: azure-credentials
+            key: username
+      - name: PASSWORD
+        valueFrom:
+          secretKeyRef:
+            name: azure-credentials
+            key: password
+      - name: TENANT
+        valueFrom:
+          secretKeyRef:
+            name: azure-credentials
+            key: tenant
+    - name: package
+      image: kramos/alpine-zip:latest
+      workingDir: /workspace/functionapp-git
+      command:
+      - sh
+      args:
+      - package.sh
+    - name: terraform-init
+      image: zenika/terraform-azure-cli:latest
+      workingDir: /workspace/functionapp-git/infrastructure
+      command:
+      - terraform
+      args:
+      - init
+    - name: terraform-plan
+      image: zenika/terraform-azure-cli:latest
+      workingDir: /workspace/functionapp-git/infrastructure
+      command:
+      - terraform
+      args:
+      - plan
+    - name: terraform-apply
+      image: zenika/terraform-azure-cli:latest
+      workingDir: /workspace/functionapp-git/infrastructure
+      command:
+      - terraform
+      args:
+      - apply
+      - -auto-approve
+
+

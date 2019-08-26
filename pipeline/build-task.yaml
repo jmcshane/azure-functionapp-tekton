@@ -1,0 +1,25 @@
+apiVersion: tekton.dev/v1alpha1
+kind: Task
+metadata:
+  name: npm-test
+  namespace: azure-functionapp
+spec:
+  inputs:
+    resources:
+      - name: functionapp-git
+        type: git
+  steps:
+    - name: install
+      image: node:10
+      workingDir: /workspace/functionapp-git/app
+      command:
+      - npm
+      args:
+      - install
+    - name: test
+      image: node:10
+      workingDir: /workspace/functionapp-git/app
+      command:
+      - npm
+      args:
+      - test
