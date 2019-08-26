@@ -1,0 +1,46 @@
+apiVersion: tekton.dev/v1alpha1
+kind: Pipeline
+metadata:
+  name: functionapp-pipeline
+spec:
+  resources:
+    - name: source-repo
+      type: git
+  params:
+    - name: resource_group_name
+      type: string
+      description: Azure Resource Group Name
+    - name: function_name
+      type: string
+      description: Azure FunctionApp Name
+  tasks:
+    - name: npm-test
+      taskRef:
+        name: npm-test
+      resources:
+        inputs:
+          - name: functionapp-git
+            resource: source-repo
+    - name: deploy-infrastructure
+      taskRef:
+        name: azure-deploy-infrastructure
+      resources:
+        inputs:
+          - name: functionapp-git
+            resource: source-repo
+      params:
+        - name: resource_group_name
+          value: "$(params.resource_group_name)"
+        - name: function_name
+          value: "$(params.function_name)"
+    - name: deploy-functionapp
+      taskRef:
+        name: azure-deploy-app
+      resources:
+        inputs:
+          - name: functionapp-git
+            resource: source-repo
+      params:
+        - name: function_name
+          value: "$(params.function_name)"      
+

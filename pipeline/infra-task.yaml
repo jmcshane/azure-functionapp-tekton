@@ -5,6 +5,11 @@ metadata:
   namespace: azure-functionapp
 spec:
   inputs:
+    params:
+      - name: resource_group_name
+        type: string
+      - name: function_name
+        type: string
     resources:
       - name: functionapp-git
         type: git

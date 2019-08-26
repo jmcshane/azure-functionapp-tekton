@@ -8,6 +8,9 @@ spec:
     resources:
       - name: functionapp-git
         type: git
+    params:
+      - name: function_name
+        type: string
   steps:
     - name: install
       image: node:10
@@ -25,6 +28,8 @@ spec:
       args:
       - /workspace/functionapp-git/deploy.sh
       env:
+      - name: FUNCTION_NAME
+        value: "$(inputs.param.function_name)"
       - name: USERNAME
         valueFrom:
           secretKeyRef:
