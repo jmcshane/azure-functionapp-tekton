@@ -1,21 +1,42 @@
-    - name: package
-      image: kramos/alpine-zip:latest
+apiVersion: tekton.dev/v1alpha1
+kind: Task
+metadata:
+  name: azure-deploy-app
+  namespace: azure-functionapp
+spec:
+  inputs:
+    resources:
+      - name: functionapp-git
+        type: git
+  steps:
+    - name: install
+      image: node:10
+      workingDir: /workspace/functionapp-git/app
+      command:
+      - npm
+      args:
+      - install
+      - --only=prod
+    - name: deploy
+      image: jmcshane/azure-func-cli:latest
       workingDir: /workspace/functionapp-git
       command:
       - sh
       args:
-      - package.sh
-    - name: azure-login
-      image: zenika/terraform-azure-cli:latest
-      workingDir: /workspace/functionapp-git/infrastructure
-      command:
-      - az
-      args:
-      - login
-      - --service-principal
-      - -u
-      - "$(USERNAME)"
-      - -p
-      - "$(PASSWORD)"
-      - --tenant
-      - "$(TENANT)"
+      - deploy.sh
+      env:
+      - name: USERNAME
+        valueFrom:
+          secretKeyRef:
+            name: azure-credentials
+            key: username
+      - name: PASSWORD
+        valueFrom:
+          secretKeyRef:
+            name: azure-credentials
+            key: password
+      - name: TENANT
+        valueFrom:
+          secretKeyRef:
+            name: azure-credentials
+            key: tenant

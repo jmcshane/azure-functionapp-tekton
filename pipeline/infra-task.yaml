@@ -9,34 +9,6 @@ spec:
       - name: functionapp-git
         type: git
   steps:
-    - name: terraform-test
-      image: zenika/terraform-azure-cli:latest
-      workingDir: /workspace/functionapp-git/infrastructure
-      command:
-      - sleep
-      args:
-      - "400"
-      env:
-      - name: ARM_CLIENT_ID
-        valueFrom:
-          secretKeyRef:
-            name: azure-credentials
-            key: username
-      - name: ARM_CLIENT_SECRET
-        valueFrom:
-          secretKeyRef:
-            name: azure-credentials
-            key: password
-      - name: ARM_TENANT_ID
-        valueFrom:
-          secretKeyRef:
-            name: azure-credentials
-            key: tenant
-      - name: ARM_SUBSCRIPTION_ID
-        valueFrom:
-          secretKeyRef:
-            name: azure-credentials
-            key: subscription
     - name: terraform-init
       image: zenika/terraform-azure-cli:latest
       workingDir: /workspace/functionapp-git/infrastructure

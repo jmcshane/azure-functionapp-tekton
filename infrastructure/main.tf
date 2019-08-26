@@ -1,5 +1,5 @@
 resource "azurerm_resource_group" "main" {
-    name     = "tekton-azure-function-demo"
+    name     = "${var.rg_name}"
     location = "centralus"
 }
 
@@ -26,7 +26,7 @@ resource "azurerm_storage_account" "sa" {
 
 
 resource "azurerm_function_app" "test" {
-  name                      = "mcshane-tekton-functionapp-test"
+  name                      = "${var.functionapp_name}"
   location                  = "${azurerm_resource_group.main.location}"
   resource_group_name       = "${azurerm_resource_group.main.name}"
   app_service_plan_id       = "${azurerm_app_service_plan.plan.id}"
