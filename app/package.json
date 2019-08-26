@@ -1,0 +1,12 @@
+{
+  "name": "basic-functionapp",
+  "version": "0.0.1",
+  "description": "Demonstrating deploying a functionapp to azure using Terraform and Tekton",
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "james.mcshane@objectpartners.com",
+  "devDependencies": {
+    "jest": "^24.9.0"
+  }
+}
