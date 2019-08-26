@@ -29,7 +29,7 @@ spec:
       - /workspace/functionapp-git/deploy.sh
       env:
       - name: FUNCTION_NAME
-        value: "$(inputs.param.function_name)"
+        value: "$(inputs.params.function_name)"
       - name: USERNAME
         valueFrom:
           secretKeyRef:

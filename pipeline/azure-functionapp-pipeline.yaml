@@ -36,6 +36,9 @@ spec:
     - name: deploy-functionapp
       taskRef:
         name: azure-deploy-app
+      runAfter:
+      - npm-test
+      - deploy-infrastructure
       resources:
         inputs:
           - name: functionapp-git
